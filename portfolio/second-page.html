@@ -1,0 +1,1447 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Interactive Car Portfolio</title>
+    <style>
+        body {
+            margin: 0;
+            padding: 0;
+            font-family: Arial, sans-serif;
+            background-color: #000;
+            overflow-x: hidden;
+        }
+
+        #road-container {
+            position: relative;
+            width: 100%;
+            height: 100vh;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+
+        .road {
+            position: relative;
+            width: 90%;
+            height: 250px;
+            background-color: #333;
+            border-radius: 10px;
+            overflow: hidden;
+            margin-top: 50px;
+            margin-bottom: 50px;
+        }
+
+        .road::before {
+            content: '';
+            position: absolute;
+            top: 50%;
+            left: 0;
+            width: 100%;
+            height: 10px;
+            background: repeating-linear-gradient(
+                to right,
+                #fff,
+                #fff 20px,
+                transparent 20px,
+                transparent 40px
+            );
+            transform: translateY(-50%);
+        }
+
+        .car {
+            position: absolute;
+            bottom: 100px;
+            left: 10px;
+            width: 60px;
+            transition: transform 0.3s ease-in-out, top 0.3s ease-in-out, left 0.3s ease-in-out;
+        }
+
+        .home {
+            position: absolute;
+            width: 80px;
+            height: 100px;
+            text-align: center;
+            color: #fff;
+        }
+
+        .home .roof {
+            width: 0;
+            height: 0;
+            border-left: 40px solid transparent;
+            border-right: 40px solid transparent;
+            border-bottom: 40px solid;
+        }
+
+        .home .box {
+            width: 100%;
+            height: 60px;
+            background-color: inherit;
+            line-height: 60px;
+            font-size: 14px;
+            border-radius: 5px;
+        }
+
+        .home[data-index="0"] { left: 10%; top: 10px; }
+        .home[data-index="0"] .roof { border-bottom-color: #FF5733; }
+        .home[data-index="0"] .box { background-color: #FF6F61; }
+        .home[data-index="1"] { left: 25%; bottom: 10px; }
+        .home[data-index="1"] .roof { border-bottom-color: #FFC300; }
+        .home[data-index="1"] .box { background-color: #FFD54F; }
+        .home[data-index="2"] { left: 40%; top: 10px; }
+        .home[data-index="2"] .roof { border-bottom-color: #28B463; }
+        .home[data-index="2"] .box { background-color: #58D68D; }
+        .home[data-index="3"] { left: 55%; bottom: 10px; }
+        .home[data-index="3"] .roof { border-bottom-color: #3498DB; }
+        .home[data-index="3"] .box { background-color: #5DADE2; }
+        .home[data-index="4"] { left: 70%; top: 10px; }
+        .home[data-index="4"] .roof { border-bottom-color: #8E44AD; }
+        .home[data-index="4"] .box { background-color: #A569BD; }
+        .home[data-index="5"] { left: 85%; bottom: 10px; }
+        .home[data-index="5"] .roof { border-bottom-color: #E74C3C; }
+        .home[data-index="5"] .box { background-color: #EC7063; }
+       
+       
+        
+        
+        
+
+        /* Pop-up Box */
+        #popup {
+            position: fixed;
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -50%);
+            width: 500px;
+            padding: 30px;
+            background: linear-gradient(135deg, #6a11cb, #2575fc);
+            color: #fff;
+            border-radius: 15px;
+            display: none;
+            box-shadow: 0 8px 16px rgba(0, 0, 0, 0.6);
+            z-index: 10;
+            font-family: 'Roboto', sans-serif;
+            opacity: 0;
+            transition: opacity 0.5s ease-in-out;
+        }
+
+        #popup h2 { margin-top: 0; font-size: 28px; color: #ffd700; text-align: center; }
+        #popup p { font-size: 18px; margin-bottom: 20px; line-height: 1.6; text-align: justify; }
+        #popup img { width: 100px; height: 100px; border-radius: 50%; display: block; margin: 0 auto 15px auto; }
+        #popup img.hidden { display: none; }
+
+        #popup button {
+            margin-top: 10px;
+            padding: 10px 20px;
+            background-color: #FF5733;
+            color: white;
+            border: none;
+            border-radius: 5px;
+            cursor: pointer;
+        }
+        #popup button:hover { background-color: #FF6F61; }
+
+      
+      
+
+        
+        /* General Pop-up Box Styles */
+.popup {
+    display: none;
+    position: fixed;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+    width: 500px;  /* Set width to a fixed size */
+    max-width: 90%;  /* Add max-width for responsiveness */
+    padding: 30px;
+    background: linear-gradient(135deg, #6a11cb, #2575fc);
+    color: #fff;
+    border-radius: 15px;
+    box-shadow: 0 8px 16px rgba(0, 0, 0, 0.6);
+    z-index: 10;
+    font-family: 'Roboto', sans-serif;
+    opacity: 0;
+    transition: opacity 0.5s ease-in-out;
+    text-align: center;
+}
+
+/* Close button inside pop-up */
+.popup-close {
+    margin-top: 10px;
+    padding: 12px 20px;
+    background-color: #FF5733;
+    color: white;
+    border: none;
+    border-radius: 5px;
+    cursor: pointer;
+    font-size: 16px;
+    transition: background-color 0.3s ease, transform 0.2s ease;
+}
+
+.popup-close:hover {
+    background-color: #FF6F61;
+    transform: scale(1.05);
+}
+/* Skills Popup */
+#skills-popup {
+    text-align: center;
+    padding: 40px 20px;
+    background: linear-gradient(135deg, #6a11cb, #2575fc);
+    color: #fff;
+    border-radius: 15px;
+    font-family: 'Roboto', sans-serif;
+}
+
+#skills-popup .slider {
+    position: relative;
+    width: 100%;
+    height: auto;
+    overflow: hidden;
+}
+
+#skills-popup .slides {
+    display: flex;
+    transition: transform 0.5s ease-in-out;
+}
+
+#skills-popup .slide {
+    min-width: 100%;
+    box-sizing: border-box;
+    padding: 20px;
+    background-color: rgba(255, 255, 255, 0.1);
+    border-radius: 10px;
+    font-size: 18px;
+}
+
+#skills-popup .navigation {
+    display: flex;
+    justify-content: center;
+    margin-top: 20px;
+    gap: 10px;
+}
+
+#skills-popup .navigation button {
+    padding: 12px 20px;
+    background-color: #FF5733;
+    color: #fff;
+    border: none;
+    border-radius: 8px;
+    cursor: pointer;
+    font-size: 16px;
+    transition: background-color 0.3s ease, transform 0.2s ease;
+}
+
+#skills-popup .navigation button:hover {
+    background-color: #ff6f61;
+    transform: scale(1.05);
+}
+
+/* Contact Form Popup */
+#contact-popup {
+    text-align: left;
+    padding: 30px;
+    background: linear-gradient(135deg, #6a11cb, #2575fc);
+    color: #fff;
+    border-radius: 15px;
+    box-shadow: 0 8px 16px rgba(0, 0, 0, 0.6);
+    font-family: 'Roboto', sans-serif;
+    overflow: hidden;
+}
+
+h2 {
+    margin-bottom: 20px;
+    font-size: 24px;
+}
+
+.form-group {
+    margin-bottom: 15px;
+}
+
+label {
+    display: block;
+    font-size: 16px;
+}
+
+input, textarea {
+    width: 100%;
+    padding: 10px;
+    font-size: 16px;
+    border-radius: 5px;
+    border: none;
+    margin-top: 5px;
+}
+
+textarea {
+    resize: vertical;
+}
+
+.form-actions {
+    display: flex;
+    justify-content: space-between;
+    margin-top: 20px;
+}
+
+.submit-btn, .popup-close {
+    padding: 12px 20px;
+    background-color: #FF5733;
+    color: white;
+    border: none;
+    border-radius: 8px;
+    cursor: pointer;
+    font-size: 16px;
+    transition: background-color 0.3s ease, transform 0.2s ease;
+}
+
+.submit-btn:hover, .popup-close:hover {
+    background-color: #FF6F61;
+    transform: scale(1.05);
+}
+
+.popup-close {
+    background-color: #2575fc;
+}
+
+.popup-close:hover {
+    background-color: #6a11cb;
+}
+
+/* Success Popup */
+#success-popup {
+    position: fixed;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+    padding: 20px;
+    background-color: rgba(40, 180, 99, 0.7);
+    color: white;
+    font-size: 18px;
+    border-radius: 10px;
+    display: none;
+    opacity: 0;
+    z-index: 11;
+}
+
+ /* Education Road and Milestones */
+ .education-road {
+    position: relative;
+    width: 100%;
+    height: 100px;
+    background-color: #333;
+    margin-top: 20px;
+    border-radius: 10px;
+    overflow: hidden;
+}
+
+.education-road::before {
+    content: '';
+    position: absolute;
+    top: 50%;
+    left: 0;
+    width: 100%;
+    height: 10px;
+    background: repeating-linear-gradient(
+        to right,
+        #fff,
+        #fff 20px,
+        transparent 20px,
+        transparent 40px
+    );
+    transform: translateY(-50%);
+}
+
+.stop-point {
+    position: absolute;
+    top: 50%;
+    width: 20px;
+    height: 20px;
+    background-color: #FFD700;
+    border-radius: 50%;
+    transform: translateY(-50%);
+    cursor: pointer;
+}
+
+.stop-point:hover {
+    background-color: #FF6F61;
+}
+.popup-close {
+    margin-top: 10px;
+    padding: 10px 20px;
+    background-color: #FF5733;
+    color: white;
+    border: none;
+    border-radius: 5px;
+    cursor: pointer;
+    font-size: 16px;
+}
+.popup-close:hover {
+    background-color: #FF6F61;
+}
+.view-btn {
+    padding: 10px 20px;
+    background-color: #FF5733;
+    color: white;
+    border: none;
+    border-radius: 5px;
+    cursor: pointer;
+    font-size: 16px;
+    margin-top: 20px;
+}
+.view-btn:hover {
+    background-color: #FF6F61;
+}
+
+#experience-popup {
+    position: fixed;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+    width: 500px;
+    padding: 30px;
+    background: linear-gradient(135deg, #6a11cb, #2575fc);
+    color: #fff;
+    border-radius: 15px;
+    display: none;
+    box-shadow: 0 8px 16px rgba(0, 0, 0, 0.6);
+    z-index: 10;
+    font-family: 'Roboto', sans-serif;
+    text-align: center;
+    overflow: hidden;
+}
+
+.slider {
+    position: relative;
+    width: 100%;
+    height: auto;
+    overflow: hidden;
+}
+
+.slides {
+    display: flex;
+    transition: transform 0.5s ease-in-out;
+}
+
+.slide {
+    min-width: 100%;
+    box-sizing: border-box;
+    text-align: center;
+    padding: 20px;
+    background-color: rgba(255, 255, 255, 0.1);
+    border-radius: 10px;
+    font-size: 18px;
+}
+
+.navigation {
+    display: flex;
+    justify-content: center;
+    margin-top: 20px;
+    gap: 10px;
+}
+
+.navigation button {
+    padding: 12px 20px;
+    background-color: #FF5733;
+    color: #fff;
+    border: none;
+    border-radius: 8px;
+    cursor: pointer;
+    font-size: 16px;
+    transition: background-color 0.3s ease, transform 0.2s ease;
+}
+
+.navigation button:hover {
+    background-color: #ff6f61;
+    transform: scale(1.05);
+}
+
+/* Close button */
+.popup-close {
+    margin-top: 10px;
+    padding: 10px 20px;
+    background-color: #FF5733;
+    color: white;
+    border: none;
+    border-radius: 5px;
+    cursor: pointer;
+    font-size: 16px;
+}
+
+.popup-close:hover {
+    background-color: #FF6F61;
+}
+
+
+
+#score-container {
+    position: fixed;
+    top: 20px;
+    right:20px;
+    padding: 20px;
+    border-radius: 10px;
+    box-shadow: 0 0 20px rgba(0, 0, 0, 10);
+    background: linear-gradient(120deg, #5a54ff, #ff55b1, #55c2ff);
+
+}
+
+#score {
+    font-size: 18px;
+    font-weight: bold;
+}
+
+#finish-btn {
+    margin-top: 10px;
+    padding: 10px 20px;
+    background: #4834d4;
+
+    color: white;
+    border: none;
+    border-radius: 10px;
+    cursor: pointer;
+}
+
+#finish-btn:hover {
+    background: linear-gradient(120deg, #5a54ff, #ff55b1, #55c2ff);
+
+}
+/* Congratulatory Popup */
+#congratsPopup {
+    position: fixed;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+    background-color: white;
+    padding: 20px;
+    border-radius: 10px;
+    box-shadow: 0px 4px 6px rgba(0, 0, 0, 0.1);
+    z-index: 1001;
+    display: none; /* Initially hidden */
+    text-align: center;
+}
+
+/* Balloons */
+#balloons {
+    position: fixed;
+    top: -100px;
+    left: 100px;
+    width: 100%;
+    z-index: 1002;
+    display: none; /* Initially hidden */
+}
+
+.balloon {
+    position: absolute;
+    width: 60px;
+    height: 90px;
+    background-color: #ff6f61;
+    border-radius: 50%;
+    animation: floatBalloons 6s infinite ease-in-out;
+}
+
+@keyframes floatBalloons {
+    0% {
+        transform: translateY(0);
+    }
+    100% {
+        transform: translateY(-100vh); /* Move balloons across the full screen height */
+    }
+}
+
+/* Confetti */
+#confetti {
+    position: fixed;
+    top: -50px;
+    left: 0;
+    width: 100%;
+    z-index: 1003;
+    display: none; /* Initially hidden */
+}
+
+.confetti {
+    position: absolute;
+    width: 10px;
+    height: 10px;
+    background-color: #ffeb3b;
+    animation: fallConfetti 3s infinite ease-in-out;
+}
+
+@keyframes fallConfetti {
+    0% {
+        opacity: 0;
+        transform: translateY(-50px);
+    }
+    50% {
+        opacity: 1;
+        transform: translateY(100vh); /* Confetti falls across the full screen height */
+    }
+    100% {
+        opacity: 0;
+        transform: translateY(200px);
+    }
+}
+
+/* Fireworks/Spark Effect */
+#fireworks {
+    position: fixed;
+    bottom: -50px;
+    left: 0;
+    width: 100%;
+    z-index: 1004;
+    display: none; /* Initially hidden */
+}
+
+.firework {
+    position: absolute;
+    width: 6px;
+    height: 40px;
+    background-color: orange;
+    animation: spark 1.5s infinite;
+}
+
+@keyframes spark {
+    0% {
+        opacity: 1;
+        transform: translateY(0) scale(1);
+    }
+    50% {
+        opacity: 0.8;
+        transform: translateY(-50vh) scale(1.5);
+    }
+    100% {
+        opacity: 0;
+        transform: translateY(-100vh) scale(2);
+    }
+}
+/* Modal Styles */
+.modal {
+    position: fixed;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+    width: 400px;
+    padding: 30px;
+    color: #333;
+    background: linear-gradient(135deg, #6a11cb, #2575fc);
+    border-radius: 15px;
+    display: none;
+    box-shadow: 0 8px 16px rgba(0, 0, 0, 0.2);
+    z-index: 10;
+    font-family: 'Roboto', sans-serif;
+    text-align: center;
+    overflow: hidden;
+}
+
+.modal-content {
+    background-color: #fdfdfd;
+    margin: 15% auto;
+    padding: 20px;
+    border: 1px solid #e1e1e1;
+    align-items: center; /* Centers the content vertically */
+    text-align: center; /* Centers the text*/
+    width: 80%;
+    max-width: 600px;
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+    border-radius: 10px;
+}
+
+
+
+.close:hover,
+.close:focus {
+    color: #ff4b5c;
+    text-decoration: none;
+}
+
+/* Flexbox for horizontal layout */
+.projects {
+    display: flex;
+    justify-content: space-between;
+    gap: 20px;
+}
+
+.project {
+    background-color: #b8e994;
+    padding: 15px;
+    border-radius: 10px;
+    width: 30%;
+    text-align: center;
+    font-size: 18px;
+    cursor: pointer;
+    box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+    transition: transform 0.2s, background-color 0.3s;
+}
+
+.project:hover {
+    background-color: #78e08f;
+    transform: translateY(-5px);
+}
+
+/* Project Info Box */
+.project-info {
+    margin-top: 20px;
+    font-size: 16px;
+    padding: 15px;
+    background-color: #f4f4f4;
+    color: #333;
+    border-radius: 10px;
+    box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+}
+
+/* Button Styles */
+.btn {
+    display: inline-block;
+    background-color: #6c5ce7;
+    color: white;
+    padding: 10px 20px;
+    margin-top: 10px;
+    text-decoration: none;
+    border-radius: 8px;
+    transition: background-color 0.3s ease, box-shadow 0.3s ease;
+    font-size: 16px;
+}
+
+.btn:hover {
+    background-color: #4834d4;
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
+}
+
+.heading {
+    color: #ee0b0b; /* Example color for headings */
+    font-weight: bold;
+  }
+  ul {
+    list-style-type: disc; /* Bullet points */
+    margin-left: 20px; /* Space from left */
+    padding-left: 0; /* Remove padding on the left */
+  }
+
+  li {
+    margin-bottom: 5px; /* Space between list items */
+    font-size: 16px; /* Font size for list items */
+    color: #ffffff; /* Lighter text color for list items */
+    padding-left: 5px; /* Small space between bullet and text */
+  }
+
+
+  #flashlight {
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    pointer-events: none; /* Ensure it doesn't interfere with interactions */
+    opacity: 0; /* Initially hidden */
+    animation: none;
+    z-index: 1000; /* Place it above other elements */
+}
+@keyframes flashlight-effect {
+    0% {
+        opacity: 0.9;
+        transform: scale(0);
+    }
+    100% {
+        opacity: 0;
+        transform: scale(5);
+    }
+}
+
+.main{
+    position: fixed;
+    top: 20px;
+    left:20px;
+    padding: 20px;
+    border-radius: 10px;
+    box-shadow: 0 0 20px rgba(0, 0, 0, 10);
+    background: linear-gradient(120deg, #5a54ff, #ff55b1, #55c2ff);
+
+}
+
+
+
+
+
+
+
+
+
+
+  
+  
+  
+
+        
+
+       
+        
+        
+       
+        
+        
+    </style>
+</head>
+<body>
+    <div id="road-container">
+        <div class="road">
+            <img class="car" id="car" src="mmm.gif" alt="Car Image">
+            <div class="home" data-index="0"><div class="roof"></div><div class="box">About Me</div></div>
+            <div class="home" data-index="1"><div class="roof"></div><div class="box">Education</div></div>
+            <div class="home" data-index="2"><div class="roof"></div><div class="box">Skills</div></div>
+            <div class="home" data-index="3"><div class="roof"></div><div class="box">Experience</div></div>
+            <div class="home" data-index="4"><div class="roof"></div><div class="box">Projects</div></div>
+            <div class="home" data-index="5"><div class="roof"></div><div class="box">Contact</div></div>
+        </div>
+    </div>
+
+    <div class="main">Enter each house to know more<br>
+    and finish the race by moving car</div>
+
+
+    <div id="popup">
+        <img id="popup-image" class="hidden" src="image.avif" alt="User Image">
+        <h2 id="popup-title"></h2>
+        <p id="popup-content"></p>
+        <div id="education-road" class="education-road" style="display: none;">
+            <div class="stop-point" id="stop-1" style="left: 10%" onmouseover="showMilestone(1)"></div>
+            <div class="stop-point" id="stop-2" style="left: 50%" onmouseover="showMilestone(2)"></div>
+            <div class="stop-point" id="stop-3" style="left: 90%" onmouseover="showMilestone(3)"></div>
+        </div>
+        <button onclick="closePopup()">Close</button>
+    </div>
+
+
+    <div id="skills-popup" class="popup">
+        <h2>My Skills</h2>
+        <div class="slider">
+            <div class="slides">
+                <div class="slide">
+                    <span class="heading">• Programming Languages:</span><br>
+                    <ul>
+                      <li>Java</li>
+                      <li>Solidity</li>
+                      <li>HTML</li>
+                      <li>CSS</li>
+                      <li>JavaScript</li>
+                    </ul>
+                  </div>
+                  
+                  <div class="slide">
+                    <span class="heading">• Developer Tools:</span><br>
+                    <ul>
+                      <li>Git/GitHub</li>
+                      <li>Google Colab</li>
+                      <li>VS Code</li>
+                      <li>Android Studio</li>
+                      <li>Figma     </li>
+                    </ul>
+                  </div>
+
+                  <div class="slide">
+                    <span class="heading">•Frameworks/Libraries:</span><br>
+                    <ul>
+                      <li>Bootstrap</li>
+                      <li>TenserFlow</li>
+                     
+                    </ul>
+                  </div>
+                  <div class="slide">
+                    <span class="heading">•Databases:</span><br>
+                    <ul>
+                      <li>MongoDB</li>
+                      <li>Mysql</li>
+                     
+                    </ul>
+                  </div>
+                  
+                  
+                  <div class="slide">
+                    <span class="heading">• Certifications:</span><br>
+                    <ul>
+                      <li>Fundamentals of Prompt Engineering (AWS)</li>
+                      <li>Cloud Computing, Generative AI, Cyber Security, TensorFlow (Google Developer Student Club)</li>
+                      <li>Full Stack Web, MongoDB(Geeks for Geeks)</li>
+                    </ul>
+                    <button class="view-btn" onclick="viewLinkedIn()">View Certifications</button>
+                  </div>
+                  
+                    
+                 
+    
+  
+  
+            </div>
+        </div>
+        <div class="navigation">
+            <button onclick="prevSlide()">Previous</button>
+            <button onclick="nextSlide()">Next</button>
+        </div>
+        <button class="popup-close" onclick="closeSkillsPopup()">Close</button>
+    </div>
+    
+
+
+                
+                               
+
+        
+    <div id="experience-popup">
+        <h2>Experience</h2>
+        <div class="slider">
+            <div class="slides">
+                <div class="slide">
+                    <span class="heading">AICTE Virtual Internship– Full Stack Web Development </span><br>
+                    <ul>
+                      <li> Learn web application using HTML, CSS,
+                        JavaScript, Bootcamp, Git/github,Spring Boot. Improved problem-solving and web security skills using GitHub
+                        for version control.</li>
+                      
+                    </ul>
+                  </div>
+
+                  <div class="slide">
+                    <span class="heading"> Coordinator Roles</span><br>
+                    <ul>
+                      <li>Student Coordinator– Google Developer Student Club (GDSC): Organized technical events and
+                        hackathons, fostering collaboration and mentoring peers on innovative projects.</li>
+                      <li>Membership and Coordinator– IEEE Student Branch: Managedtechnicaleventsandseminars, engaging
+                        students and professionals to promote technical growth.</li>
+                     
+                    </ul>
+                  </div>
+
+
+                  <div class="slide">
+                    <span class="heading">Beyond the Classroom</span><br>
+                    <ul>
+                    <li>Hackathons: Solution Challenge 2024 (Regional Bootcamp), Smart India Hackathon (SIH) 2024</li>
+                    <li>Workshops: AI Tools (Be10x, Freedom with AI)</li>
+                    <li>Conferences: IEEE Conferences (IEcom2023 at MBU, NCABCD-2024 at MBU)</li>
+                    
+                     
+                    </ul>
+                  </div>
+            </div>
+        </div>
+        <div class="navigation">
+            <button onclick="prevExperienceSlide()">Previous</button>
+            <button onclick="nextExperienceSlide()">Next</button>
+        </div>
+        <button class="popup-close" onclick="closeExperiencePopup()">Close</button>
+    </div>
+
+    <div id="contact-popup" class="popup">
+        <h2>Contact Me</h2>
+        <form id="contact-form">
+            <div class="form-group">
+                <label for="name">Name:</label>
+                <input type="text" id="name" name="name" required>
+            </div>
+            <div class="form-group">
+                <label for="phone">Phone Number:</label>
+                <input type="tel" id="phone" name="phone" required>
+            </div>
+            <div class="form-group">
+                <label for="email">Email ID:</label>
+                <input type="email" id="email" name="email" required>
+            </div>
+            <div class="form-group">
+                <label for="message">Message:</label>
+                <textarea id="message" name="message" rows="4" required></textarea>
+            </div>
+            <div class="form-actions">
+                <button type="submit" class="submit-btn">Submit</button>
+                <button type="button" class="popup-close" onclick="closeContactPopup()">Close</button>
+            </div>
+        </form>
+    </div>
+    <div id="success-popup">
+        <p>Form submitted successfully!</p>
+    </div>
+
+   
+
+<!-- Score and Finish button -->
+<div id="score-container">
+    <p id="score">Score: 0</p>
+    <button id="finish-btn">Finish</button>
+</div>
+<!-- Congratulatory Popup -->
+<div id="congratsPopup" class="popup" style="display: none;">
+    <h2>Congratulations!</h2>
+    <p>You scored 60 points!</p>
+    
+    <!-- Balloons -->
+    <div id="balloons">
+        <div class="balloon"></div>
+        <div class="balloon"></div>
+        <div class="balloon"></div>
+    </div>
+
+    <!-- Confetti -->
+    <div id="confetti">
+        <div class="confetti"></div>
+        <div class="confetti"></div>
+        <div class="confetti"></div>
+    </div>
+
+    <!-- Fire/Spark Effect -->
+    <div id="fireworks">
+        <div class="firework"></div>
+        <div class="firework"></div>
+        <div class="firework"></div>
+    </div>
+</div>
+
+  <!-- The Modal -->
+  <div id="myModal" class="modal">
+    <!-- Modal content -->
+    <div class="modal-content">
+
+        
+      <h2>Projects</h2>
+      <div class="projects">
+        <div class="project" data-project="1">Protfolio</div>
+        <div class="project" data-project="2">Step Counter</div>
+        <div class="project" data-project="3">Classic Games</div>
+      </div>
+      <div id="projectInfo" class="project-info">
+        <p>Select a project to see the details.</p>
+      </div>
+    </div>
+    
+    <button class="popup-close" onclick="closeprojectPopup()">Close</button>
+  </div>
+
+  <div id="flashlight" ></div>
+
+
+
+
+    
+    <script>
+        const car = document.getElementById("car");
+        const road = document.querySelector(".road");
+        const popup = document.getElementById("popup");
+        const popupTitle = document.getElementById("popup-title");
+        const popupContent = document.getElementById("popup-content");
+        const houses = document.querySelectorAll(".home");
+        
+        const experiencePopup = document.getElementById("experience-popup");
+        const experienceSlides = experiencePopup.querySelector(".slides");
+        const totalExperienceSlides = experiencePopup.querySelectorAll(".slide").length;
+        const skillsPopup = document.getElementById("skills-popup");
+        const slides = skillsPopup.querySelector(".slides");
+        const totalSlides = skillsPopup.querySelectorAll(".slide").length;
+        const contactPopup = document.getElementById("contact-popup");  // Added contact popup
+        const contactForm = contactPopup.querySelector("#contact-form");
+        const finishBtn = document.getElementById('finish-btn');
+const scoreElement = document.getElementById('score');
+const congratsPopup = document.getElementById('congrats-popup');
+const projects = document.querySelectorAll(".project");
+const flashlight = document.getElementById("flashlight");
+
+        let currentSlide = 0;
+        let currentExperienceSlide = 0;
+        let carPositionX = 10;
+       
+       
+let unvisitedHouses = new Set([0, 1, 2, 3, 4, 5]); // To track unvisited houses
+let isPopupOpen = false;
+let currentHouseIndex = null;
+        
+        const houseData = [
+            { 
+                name: "About Me", 
+                description: "Highly motivated 3rd-year Computer Science student with strong skills in programming, Data Structures, and Algorithms, Prompt Engineering, and AI tools. Eager to contribute to innovative projects and learn from industry leaders through an internship opportunity.", 
+                image: "profile.jpg", 
+                lightColor: "rgba(255, 87, 51, 0.7)" 
+            },
+            { 
+                name: "Education", 
+                description: "Every stop has an information.", 
+                lightColor: "rgba(255, 195, 0, 0.7)", 
+                milestones: [
+                    { 
+                        milestone: "SSC", 
+                        description: "Sri Vani High School, Tadipatri. Had a memorable schooling days",
+                        color: "rgba(255, 99, 132, 0.8)"  // Example color for SSC
+                        
+                    },
+                    { 
+                        milestone: "Intermediate", 
+                        description: "J.C.Nagi Reddy Memorial Junior College, Tadipatri. Graduated with a strong foundation in mathematics and science",
+                        color: "rgba(54, 162, 235, 0.8)"  // Example color for Intermediate
+                    },
+                    { 
+                        milestone: "B.Tech", 
+                        description: "Mohan Babu University, Tirupati. 3rd-year Computer Science",
+                        color: "rgba(75, 192, 192, 0.8)"  // Example color for B.Tech
+                    }
+                ]
+            },
+            
+            { 
+                name: "Skills", 
+                description: "Explore my technical skills!", 
+                lightColor: "rgba(40, 180, 99, 0.7)" 
+            },
+            { 
+                name: "Experience", 
+                description: "Internship opportunities.", 
+                lightColor: "rgba(52, 152, 219, 0.7)",
+                action: openExperiencePopup // Action to open Experience popup
+            },
+            { 
+                name: "Projects", 
+                description: "Innovative projects.", 
+                lightColor: "rgba(142, 68, 173, 0.7)" 
+            },
+            { 
+                name: "Contact", 
+                description: "Reach out to me!", 
+                lightColor: "rgba(231, 76, 60, 0.7)", 
+                action: openContactPopup  // Action to open Contact popup
+            }
+        ];
+        
+        let score = 0; // Initialize score
+let visitedHouses = new Set(); // To track visited houses
+// Move the car and update the house index
+function moveCar(direction) {
+    if (isPopupOpen) return;
+
+    const carWidth = car.offsetWidth;
+    const roadWidth = road.offsetWidth;
+
+    if (direction === "left" && carPositionX > 0) {
+        carPositionX -= 10;
+    } else if (direction === "right" && carPositionX < roadWidth - carWidth) {
+        carPositionX += 10;
+    }
+
+    car.style.left = `${carPositionX}px`;
+
+    currentHouseIndex = Array.from(houses).findIndex(house => Math.abs(carPositionX - house.offsetLeft) < 40);
+}
+function showPopup() {
+    if (currentHouseIndex !== null && !isPopupOpen) {
+        const house = houseData[currentHouseIndex];
+        popupTitle.textContent = house.name;
+
+        // Flashlight effect
+        const flashlight = document.getElementById("flashlight");
+        const houseColor = house.lightColor || house.color || "#ffffff"; // Fallback to white if no color is provided
+
+        flashlight.style.background = `radial-gradient(circle, ${houseColor} 0%, rgba(255, 255, 255, 0) 50%)`;
+        flashlight.style.animation = "flashlight-effect 0.5s ease-out";
+        flashlight.style.opacity = "1";
+
+        setTimeout(() => {
+            flashlight.style.opacity = "0"; // Hide flashlight after animation
+            flashlight.style.animation = "none"; // Reset animation
+        }, 500);
+
+        // If the house has not been visited, increase the score
+        if (!visitedHouses.has(currentHouseIndex)) {
+            score += 10; // Increment score by 10 for new house visit
+            visitedHouses.add(currentHouseIndex); // Mark the house as visited
+        }
+
+        // Display the current score
+        scoreElement.textContent = `Score: ${score}`;
+
+        // Handle special pop-ups based on house index
+        if (currentHouseIndex === 2) {
+            openSkillsPopup(); // Open Skills Popup
+        } else if (currentHouseIndex === 3) {
+            openExperiencePopup(); // Open Experience Popup
+        } else if (currentHouseIndex === 5) {
+            openContactPopup(); // Open Contact Me Popup
+        } else if (currentHouseIndex === 4) {
+            openProjectPopup(); // Open Projects Popup
+        } else {
+            popupContent.textContent = house.description; // Default description
+            if (currentHouseIndex === 0) {
+                // Show image for "About Me"
+                const popupImage = document.getElementById("popup-image");
+                popupImage.classList.remove("hidden");
+            }
+            popup.style.display = "block";
+            popup.style.opacity = "1";  // Add fade-in effect
+            isPopupOpen = true;
+
+            // Show education road if in Education house (House index 1)
+            if (currentHouseIndex === 1) {
+                document.getElementById("education-road").style.display = "block";
+            }
+        }
+    }
+}
+
+
+function closePopup() {
+    popup.style.display = "none";
+    document.getElementById("popup-image").classList.add("hidden");
+    document.getElementById("education-road").style.display = "none";  // Hide education road if visible
+    isPopupOpen = false;
+    
+
+    
+
+}
+
+
+
+function showFinishPopup() {
+    if (score < 60) {
+        // Collect the names of the unvisited houses
+        let unvisitedList = '';
+        
+        // Iterate over all house indices and check which ones haven't been visited
+        for (let i = 0; i < houseData.length; i++) {
+            if (!visitedHouses.has(i)) {
+                unvisitedList += `${houseData[i].name}<br>`; // Add house name to list
+            }
+        }
+
+        // Display the names of the unvisited houses
+        popupTitle.textContent = 'Unvisited Houses';
+        popupContent.innerHTML = unvisitedList;
+        popup.style.display = "block";
+        popup.style.opacity = "1";
+    } else if (score === 60) {
+        // Show congratulatory message and animations
+        const congratsPopup = document.getElementById('congratsPopup');
+        const balloons = document.getElementById('balloons');
+        const confetti = document.getElementById('confetti');
+        const fireworks = document.getElementById('fireworks');
+        
+        // Display the congratulatory popup
+        congratsPopup.style.display = "block";
+        congratsPopup.style.opacity = "1";
+
+        // Show balloons, confetti, and fireworks animations
+        balloons.style.display = "block";
+        confetti.style.display = "block";
+        fireworks.style.display = "block";
+
+        // Close the congratulatory pop-up and redirect after 3 seconds
+        setTimeout(() => {
+            congratsPopup.style.display = "none";
+            window.location.href = "index.html"; // Redirect to the first page
+        }, 2000); // After 3 seconds, redirect
+    }
+}
+finishBtn.addEventListener('click', showFinishPopup);
+
+// Listen for keydown events to move the car
+document.addEventListener("keydown", (event) => {
+    if (event.key === "ArrowLeft") {
+        moveCar("left");
+    } else if (event.key === "ArrowRight") {
+        moveCar("right");
+    } else if (event.key === "Enter") {
+        showPopup();
+    }
+});
+
+
+
+
+
+const projectDetails = {
+    "1": {
+      description: "My portfolio showcases the highlights of my journey so far, featuring all my skills, experience, and accomplishments. It reflects my growth and passion for technology and development. Each project demonstrates my ability to apply knowledge and create impactful solutions.",
+      github:"https://github.com/vahitha1604/portfolio.git",  // GitHub link
+      project: "https://drive.google.com/file/d/1F1qE2PsvmU4zykgyza5_rdSEZtOoImqb/view?usp=drivesdk" , // Project link
+    },
+    "2": {
+      description: "Created a mobile application using Java and Android Studio to track and count users’ steps. Utilized device sensors and algorithms for accurate step tracking, providing users with detailed insights into daily activity levels.",
+      github: "https://github.com/vahitha1604/Stepcounter.1.git",
+      project: "https://drive.google.com/file/d/1EbH6T8ctc0ubhjYmnhzUMsRvuZhb0eSL/view?usp=drivesdk",
+    },
+    "3": {
+      description: "Leveraging HTML, CSS, JS, and ChatGPT, developed four classic games: Snake, Tic Tac Toe, Flippy and calculator. Used prompt engineering techniques to streamline development, enhance gameplay, and create engaging gaming experiences",
+      github: "https://github.com/vahitha1604/classicgames.git",
+      project: "https://drive.google.com/file/d/1Ef3E8ss8omEwufa_k3gJrL-jHn90ngRh/view?usp=drivesdk",
+    },
+  };
+
+
+const modal = document.getElementById("myModal");
+const projectInfo = document.getElementById("projectInfo");
+
+projects.forEach((project) => {
+  project.addEventListener("click", function () {
+    const projectId = project.getAttribute("data-project");
+    console.log("Project clicked:", projectId);
+
+    if (projectDetails[projectId]) {
+      const { description, github, project: projectLink } = projectDetails[projectId];
+      console.log("Project Details:", description, github, projectLink);
+
+      projectInfo.innerHTML = `
+        <p>${description}</p>
+        <a href="${github}" target="_blank" class="btn">View GitHub</a>
+        <a href="${projectLink}" target="_blank" class="btn">View Project</a>
+      `;
+    } else {
+      console.log("Project details not found for ID:", projectId);
+      projectInfo.innerHTML = `<p>Project details not found!</p>`;
+    }
+
+    // Open modal
+    modal.style.display = "block";
+  });
+});
+
+
+function openProjectPopup() {
+    modal.style.display = "block";  // Show the modal
+    modal.style.opacity = "1";  // Fade-in effect
+    projectInfo.innerHTML = "<p>Select a project to see the details.</p>"; // Reset content when modal opens
+    isPopupOpen = true;  // Mark as popup open
+}
+
+function closeprojectPopup() {
+    const projectPopup = document.getElementById("myModal"); // Ensure this refers to your project popup
+    projectPopup.style.display = "none";  // Hide the modal
+    isPopupOpen = false;  // Reset the popup open status
+}
+
+        
+
+        function showMilestone(milestoneIndex) {
+            const education = houseData[1];
+            const milestone = education.milestones[milestoneIndex - 1];
+            popupContent.innerHTML = `<strong>${milestone.milestone}</strong><br>${milestone.description}`;
+            popupContent.style.opacity = "0";  // Reset opacity
+            setTimeout(() => {
+                popupContent.style.opacity = "1";  // Fade-in effect
+            }, 1000);
+        }
+    
+       
+
+
+
+        
+
+    
+        function updateSlidePosition() {
+            slides.style.transform = `translateX(-${currentSlide * 100}%)`;
+        }
+    
+        // Navigation functions
+        function nextSlide() {
+            if (currentSlide < totalSlides - 1) {
+                currentSlide++;
+                updateSlidePosition();
+            }
+        }
+    
+        function prevSlide() {
+            if (currentSlide > 0) {
+                currentSlide--;
+                updateSlidePosition();
+            }
+        }
+    
+        // Opening and closing the popup
+        function openSkillsPopup() {
+            skillsPopup.style.display = "block";
+            skillsPopup.style.opacity = "1";
+            isPopupOpen = true;
+        }
+    
+        function closeSkillsPopup() {
+            skillsPopup.style.display = "none";
+            isPopupOpen = false;
+        }
+    
+        function viewLinkedIn() {
+            window.open("https://www.linkedin.com/in/vahitha-reddy/recent-activity/shares/", "_blank");
+        }
+    
+        // Experience Slide navigation
+        function openExperiencePopup() {
+            experiencePopup.style.display = "block";
+            experiencePopup.style.opacity = "1";
+            isPopupOpen = true;
+        }
+    
+        function closeExperiencePopup() {
+            experiencePopup.style.display = "none";
+            isPopupOpen = false;
+        }
+    
+        function nextExperienceSlide() {
+            if (currentExperienceSlide < totalExperienceSlides - 1) {
+                currentExperienceSlide++;
+                updateExperienceSlidePosition();
+            }
+        }
+    
+        function prevExperienceSlide() {
+            if (currentExperienceSlide > 0) {
+                currentExperienceSlide--;
+                updateExperienceSlidePosition();
+            }
+        }
+    
+        function updateExperienceSlidePosition() {
+            experienceSlides.style.transform = `translateX(-${currentExperienceSlide * 100}%)`;
+        }
+    
+        // ** Contact Form Popup Logic **
+        function openContactPopup() {
+            contactPopup.style.display = "block";
+            contactPopup.style.opacity = "1";
+            isPopupOpen = true;
+        }
+    
+        function closeContactPopup() {
+            contactPopup.style.display = "none";
+            isPopupOpen = false;
+        }
+    
+        contactForm.addEventListener('submit', function(event) {
+            event.preventDefault(); // Prevent the default form submission
+    
+            // Grab the form values
+            const name = contactForm.querySelector("#name").value;
+            const phone = contactForm.querySelector("#phone").value;
+            const email = contactForm.querySelector("#email").value;
+            const message = contactForm.querySelector("#message").value;
+    
+            // Process the form submission here (e.g., send data to server, display confirmation)
+            
+    
+            // Reset the form after submission
+            contactForm.reset();
+            
+            // Show success popup
+            showSuccessPopup();
+            closeContactPopup();
+        });
+    
+        // ** Success Popup Logic **
+        function showSuccessPopup() {
+            successPopup.style.display = "block";
+            successPopup.style.opacity = "1";
+    
+            // Hide the success popup after 3 seconds
+            setTimeout(() => {
+                successPopup.style.display = "none";
+            }, 1000);
+        }
+    
+        // Close success popup
+        function closeSuccessPopup() {
+            successPopup.style.display = "none";
+        }
+
+
+        
+    </script>
+    </body>
+    </html>

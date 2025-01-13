@@ -1,0 +1,232 @@
+    /* General reset */
+    body {
+        margin: 0;
+        padding: 0;
+        font-family: 'Poppins', sans-serif;
+        background-color: #111;
+        color: #fff;
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+        height: 100vh;
+        overflow: hidden;
+        animation: pop-in 1s ease-out forwards; /* Ensure full brightness and scale on start */
+    }
+
+    /* Pop-in animation for the entire page */
+    @keyframes pop-in {
+        0% {
+            opacity: 0; /* Initially hidden */
+            transform: scale(0.8); /* Start smaller */
+        }
+        100% {
+            opacity: 1; /* Full opacity */
+            transform: scale(1); /* Full size */
+        }
+    }
+
+    /* Home section */
+    .home-content {
+        flex: 1;
+        padding-left: 50px;
+        text-align: left;
+        position: relative;
+        animation: pop-up 1s ease-out forwards, float 3s ease-in-out infinite; /* Pop-up and float animation */
+    }
+
+    /* Pop-up animation for text */
+    @keyframes pop-up {
+        0% {
+            opacity: 0; /* Initially hidden */
+            transform: translateY(20px); /* Start from below */
+        }
+        100% {
+            opacity: 1; /* Full opacity */
+            transform: translateY(0); /* End at normal position */
+        }
+    }
+
+    /* Floating effect animation */
+    @keyframes float {
+        0%, 100% {
+            transform: translateY(0); /* Start and end at normal position */
+        }
+        50% {
+            transform: translateY(-10px); /* Move upwards */
+        }
+    }
+
+    /* Shimmer animation for text */
+    @keyframes shimmer {
+        0% {
+            background-position: 0% 50%;
+        }
+        100% {
+            background-position: 100% 50%;
+        }
+    }
+
+    .home-content h3 {
+        font-size: 24px;
+        font-weight: 300;
+        margin: 10px 0;
+        background: linear-gradient(120deg, #ff55b1, #55c2ff);
+        -webkit-background-clip: text;
+        -webkit-text-fill-color: transparent;
+        position: relative;
+        overflow: hidden;
+        animation: shimmer 4s infinite, pop-up 1s ease-out forwards, float 3s ease-in-out infinite; /* Pop-up, shimmer, and float animation */
+    }
+
+    .home-content h1 {
+        font-size: 50px;
+        font-weight: bold;
+        margin: 20px 0;
+        background: linear-gradient(120deg, #5a54ff, #ff55b1, #55c2ff);
+        -webkit-background-clip: text;
+        -webkit-text-fill-color: transparent;
+        position: relative;
+        overflow: hidden;
+        animation: shimmer 5s infinite, pop-up 1s ease-out forwards, float 3s ease-in-out infinite; /* Pop-up, shimmer, and float animation */
+    }
+
+    /* Button styling */
+    .home-content button {
+        margin-top: 20px;
+        padding: 12px 20px;
+        background: linear-gradient(to right, #5a54ff, #55c2ff);
+        border: none;
+        color: #fff;
+        font-size: 16px;
+        font-weight: bold;
+        border-radius: 25px;
+        cursor: pointer;
+        transition: all 0.3s ease;
+        box-shadow: 0 4px 15px rgba(90, 84, 255, 0.4);
+    }
+
+    .home-content button:hover {
+        background: linear-gradient(to right, #ff55b1, #5a54ff);
+        transform: translateY(-3px);
+        box-shadow: 0 6px 20px rgba(255, 85, 177, 0.5);
+    }
+
+    .home-sci {
+        position: absolute; /* Position the container */
+        bottom: -220px; /* Adjust spacing from the bottom */
+    right: 45%; /* Center horizontally */
+        transform: translateX(-50%); /* Center alignment */
+        display: flex;
+        justify-content: center;
+    }
+    
+
+   
+
+    
+
+    .home-sci a {
+        margin: 0 10px;
+        color: #ff55b1; /* Initially pink */
+        font-size: 30px;
+        transition: transform 0.3s ease, color 0.3s ease, background-color 0.3s ease;
+        background: linear-gradient(120deg, #ff55b1, #55c2ff);
+        -webkit-background-clip: text;
+        -webkit-text-fill-color: transparent;
+        
+  
+    }
+
+    .home-sci a:hover {
+        transform: scale(1.2);
+        background: linear-gradient(120deg, #55c2ff, #5a54ff); /* Turn blue on hover */
+        -webkit-background-clip: text;
+        -webkit-text-fill-color: transparent;
+        color: transparent;
+    }
+
+    /* Photo container */
+    .photo-container {
+        flex: 1;
+        display: flex;
+        justify-content: center;
+        align-items: center;
+        padding-right: 50px;
+        position: relative;
+        animation: float 3s ease-in-out infinite; /* Floating animation */
+    }
+
+    .photo-container img.photo {
+        width: 300px;
+        height: 300px;
+        border-radius: 50%;
+        object-fit: cover;
+        border: 5px solid rgba(255, 255, 255, 0.3);
+        box-shadow: 0 10px 30px rgba(0, 0, 0, 0.5);
+        transition: transform 0.3s ease;
+        z-index: 2;
+    }
+
+    /* Rotating circle */
+    .photo-container::before {
+        content: '';
+        position: absolute;
+        width: 380px;
+        height: 380px;
+        border-radius: 50%;
+        background: linear-gradient(120deg, #5a54ff, #55c2ff, #ff55b1, #5a54ff);
+        background-size: 400% 400%;
+        animation: rotate-circle 8s linear infinite, gradient-shift 4s ease-in-out infinite;
+        z-index: 1;
+    }
+
+    @keyframes rotate-circle {
+        0% {
+            transform: rotate(0deg);
+        }
+        100% {
+            transform: rotate(360deg);
+        }
+    }
+
+    @keyframes gradient-shift {
+        0%, 100% {
+            background-position: 0% 50%;
+        }
+        50% {
+            background-position: 100% 50%;
+        }
+    }
+
+    /* Hover effect for image */
+    .photo-container img.photo:hover {
+        transform: scale(1.1);
+    }
+
+ /* Download CV button styling */
+.download-cv-button {
+    position: absolute; /* Use absolute positioning */
+    bottom: 20px; /* Adjust spacing from the bottom */
+    right: 20px; /* Adjust spacing from the left side of the page */
+
+    padding: 12px 20px;
+    background: linear-gradient(to right, #ff55b1, #55c2ff);
+    border: none;
+    color: #fff;
+    font-size: 16px;
+    font-weight: bold;
+    border-radius: 25px;
+    cursor: pointer;
+    transition: all 0.3s ease;
+    box-shadow: 0 4px 15px rgba(90, 84, 255, 0.4);
+    text-decoration: none; /* Ensure it looks like a button, not a link */
+    display: inline-block; /* Makes the button responsive to styling */
+}
+
+.download-cv-button:hover {
+    background: linear-gradient(to right, #55c2ff, #5a54ff);
+    transform: translateY(-3px);
+    box-shadow: 0 6px 20px rgba(255, 85, 177, 0.5);
+}
+
+
